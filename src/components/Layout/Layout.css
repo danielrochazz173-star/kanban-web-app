@@ -1,0 +1,65 @@
+.header--with-nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.header__nav {
+  display: flex;
+  gap: 8px;
+}
+
+.header__nav-link {
+  padding: 8px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--color-heading-s, #333);
+}
+
+.header__nav-link:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.header__nav-link--active {
+  background: var(--color-purple, #635fc7);
+  color: white;
+}
+
+.header__board-name {
+  flex: 1;
+  font-weight: 600;
+}
+
+.header__user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header__user-name {
+  font-size: 14px;
+  color: var(--color-heading-s, #333);
+}
+
+.sidebar--nav .sidebar__container {
+  padding: 24px 16px;
+}
+
+.sidebar__nav-link {
+  display: block;
+  padding: 10px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--color-heading-s, #333);
+  margin-bottom: 4px;
+}
+
+.sidebar__nav-link:hover {
+  background: rgba(99, 95, 199, 0.1);
+}
+
+.sidebar__nav-link--active {
+  background: var(--color-purple, #635fc7);
+  color: white;
+}

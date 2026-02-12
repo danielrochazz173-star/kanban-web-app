@@ -8,6 +8,7 @@ import DropdownMenu from "../../DropdownMenu";
 import DropdownStatus, { OptionStatus } from "../../DropdownStatus";
 import { useDatasDispatch } from "../../../context/DataContext";
 import useNoScroll from "../../../hooks/useNoScroll";
+import { apiJson } from "../../../api";
 import { getFocusableElements, nextFocusable } from "../../../utils";
 import useKeydownWindow from "../../../hooks/useKeydownWindow";
 
@@ -74,14 +75,21 @@ const ViewTask = memo(function ViewTask({
         column.name.toLocaleLowerCase() === data.status.toLocaleLowerCase()
     )[0];
     if(column) {
+      const newCompleted = !subtask.isCompleted;
       dispatchDatasContext({
         type: "changed_status_subtask",
         idBoard: selectedBoard.id,
         idColumn: column.id,
         idTask: data.id,
         idSubtask: subtask.id,
-        newStatusSubtask: !subtask.isCompleted,
+        newStatusSubtask: newCompleted,
       });
+      if (newCompleted) {
+        apiJson("/conclusoes", {
+          method: "POST",
+          body: JSON.stringify({ taskId: data.id, subtaskId: subtask.id, tipo: "subtarefa_concluida" }),
+        }).catch(() => {});
+      }
     }
   }
 
@@ -145,6 +153,12 @@ const ViewTask = memo(function ViewTask({
           type: "changed_status_task",
           ...optionDropdownSelected,
         });
+        if (optionDropdownSelected.newStatusTask.toLowerCase() === "done") {
+          apiJson("/conclusoes", {
+            method: "POST",
+            body: JSON.stringify({ taskId: optionDropdownSelected.idTask, tipo: "tarefa_concluida" }),
+          }).catch(() => {});
+        }
       }
     };
   }, [optionDropdownSelected]);

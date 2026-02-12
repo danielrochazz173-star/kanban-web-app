@@ -9,6 +9,7 @@ import ViewTask from "../Modals/ViewTask";
 import ModalTask from "../Modals/Task";
 import DeleteModal from "../Modals/Delete";
 import { useDatasDispatch } from "../../context/DataContext";
+import { apiJson } from "../../api";
 
 type PropsMain = {
   selectedBoard: Board;
@@ -158,32 +159,36 @@ function TaskList({ tasks, selectedBoard, idColumn }: PropsTaskList) {
           const idTaskCardRef = getIdTaskByChildElement(applyAfter);
           if (idTaskCardRef) {
             const indexTaskRef = tasks.findIndex((t) => t.id === idTaskCardRef);
+            const newStatusTask = selectedBoard.columns.filter((c) => c.id === idColumn)[0].name;
             dispatchDatasContext({
               type: "changed_status_task_and_add_new_position",
               idBoard: selectedBoard.id,
               sourceColumnId: idColumnSource,
               idTask: idTask,
               targetColumnId: idColumn,
-              newStatusTask: selectedBoard.columns.filter(
-                (c) => c.id === idColumn
-              )[0].name,
+              newStatusTask,
               newIndexPosition: indexTaskRef + 1,
             });
+            if (newStatusTask.toLowerCase() === "done") {
+              apiJson("/conclusoes", { method: "POST", body: JSON.stringify({ taskId: idTask, tipo: "tarefa_concluida" }) }).catch(() => {});
+            }
             return;
           }
           return;
         }
+        const newStatusTask = selectedBoard.columns.filter((c) => c.id === idColumn)[0].name;
         dispatchDatasContext({
           type: "changed_status_task_and_add_new_position",
           idBoard: selectedBoard.id,
           sourceColumnId: idColumnSource,
           idTask: idTask,
           targetColumnId: idColumn,
-          newStatusTask: selectedBoard.columns.filter(
-            (c) => c.id === idColumn
-          )[0].name,
+          newStatusTask,
           newIndexPosition: 0,
         });
+        if (newStatusTask.toLowerCase() === "done") {
+          apiJson("/conclusoes", { method: "POST", body: JSON.stringify({ taskId: idTask, tipo: "tarefa_concluida" }) }).catch(() => {});
+        }
         return;
       } else {
         if (applyAfter) {

@@ -1,17 +1,20 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./components/App";
+import { BrowserRouter } from "react-router-dom";
+import App from "./App";
 import "./assets/styles/normalize.css";
 import "./assets/styles/index.css";
 import { ThemeContextProvider } from "./context/ThemeContext";
-import DataContextProvider from "./context/DataContext";
+import { AuthProvider } from "./context/AuthContext";
 
 ReactDOM.createRoot(document.querySelector(".container") as HTMLElement).render(
   <React.StrictMode>
     <ThemeContextProvider>
-      <DataContextProvider>
-        <App />
-      </DataContextProvider>
+      <AuthProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </AuthProvider>
     </ThemeContextProvider>
   </React.StrictMode>
 );

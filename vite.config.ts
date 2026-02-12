@@ -4,5 +4,6 @@ import react from '@vitejs/plugin-react'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: "/kanban-web-app/"
+  base: "/kanban-web-app/",
+  server: { port: 5174 },
 })

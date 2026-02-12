@@ -1,8 +1,10 @@
 import { Board, Task } from "../data";
 
-export type ActionTypeDatasReducer = 
-    {type: "save_new_board", board: Board} 
-    | {type: "edit_board", board: Board} 
+export type ActionTypeDatasReducer =
+    | { type: "set_boards"; boards: Board[] }
+    | { type: "set_board_from_server"; board: Board }
+    | { type: "save_new_board"; board: Board }
+    | { type: "edit_board"; board: Board }
     | { type: "delete_board"; idBoard: string }
     | {type: "changed_status_subtask"; idBoard: string; idColumn: string; idTask: string; idSubtask: string; newStatusSubtask: boolean} 
     | {type: "changed_status_task"; idBoard: string; sourceColumnId: string; idTask: string; newStatusTask: string; targetColumnId: string}
@@ -14,6 +16,21 @@ export type ActionTypeDatasReducer =
 
 export function datasReducer(draft: Board[], action: ActionTypeDatasReducer) {
     switch (action.type) {
+      case "set_boards": {
+        draft.length = 0;
+        action.boards.forEach((b) => draft.push(b));
+        break;
+      }
+      case "set_board_from_server": {
+        const idx = draft.findIndex((b) => b.id === action.board.id);
+        if (idx >= 0) draft.splice(idx, 1, action.board);
+        else {
+          const last = draft[draft.length - 1];
+          if (last && last.name === action.board.name) draft.splice(draft.length - 1, 1, action.board);
+          else draft.push(action.board);
+        }
+        break;
+      }
       case "save_new_board": {
         draft.push(action.board);
         break;
